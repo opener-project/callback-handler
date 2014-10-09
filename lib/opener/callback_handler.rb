@@ -11,7 +11,7 @@ require 'httpclient'
 # amazon_sqs strategy.
 STRATEGIES = ["amazon_sqs", "http"]
 STRATEGIES.each do |strategy|
-  require "opener/callback_handler/strategies/#{strategy}"
+  require_relative "callback_handler/strategies/#{strategy}"
 end
 
 module Opener
