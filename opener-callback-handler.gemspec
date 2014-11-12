@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.name          = "opener-callback-handler"
   spec.version       = Opener::CallbackHandler::VERSION
   spec.authors       = ["development@olery.com"]
-  spec.summary       = %q{Tool for handling different callback URLs based on their protocol.}
+  spec.summary       = 'Tool for handling different callback URLs based on their protocol.'
   spec.description   = spec.summary
 
   spec.license = 'Apache 2.0'
@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "pry"
 
   spec.add_dependency "json"
   spec.add_dependency "activesupport"

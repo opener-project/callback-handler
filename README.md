@@ -2,7 +2,8 @@
 
 Gem that handles the different callback URLs based on the protocol of each URL.
 
-(HTTP, HTTPS, SQS, S3, FTP etc..) For now HTTP/HTTPS and Amazon SQS are supported.
+(HTTP, HTTPS, SQS, S3, FTP etc..) For now HTTP/HTTPS and Amazon SQS are
+supported.
 
 ## Installation
 
@@ -20,7 +21,8 @@ Or install it yourself as:
 
 ## Usage
 
-For SQS, `AWS_REGION` `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables should be set on startup of the webservice or daemon.
+For SQS, `AWS_REGION` `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+environment variables should be set on startup of the webservice or daemon.
 
 ## Contributing
 
