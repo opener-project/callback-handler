@@ -1,35 +1,48 @@
-require 'active_support/inflector'
-require "opener/callback_handler/version"
+require 'json'
 require 'aws-sdk-core'
 require 'httpclient'
 
-##
-# First strategy that passes the validation is served. So make sure that
-# if there are overlapping strategies, to put the one that needs to
-# be handled, first. For example amazon_sqs URLs are also http URLs, but need
-# to be handled by the amazon_sqs strategy. so http should go after the
-# amazon_sqs strategy.
-STRATEGIES = ["amazon_sqs", "http"]
-STRATEGIES.each do |strategy|
-  require_relative "callback_handler/strategies/#{strategy}"
-end
+require_relative 'callback_handler/strategies/amazon_sqs'
+require_relative 'callback_handler/strategies/http'
+require_relative 'callback_handler/strategies/version'
 
 module Opener
   class CallbackHandler
-    attr_accessor :url
-    
+    ##
+    # The available strategies. These are processed in order to make sure the
+    # order is correct (e.g. AmazonSqs should take precedence over Http).
+    #
+    # @return [Array]
+    #
+    STRATEGIES = [
+      Opener::CallbackHandler::Strategies::AmazonSqs,
+      Opener::CallbackHandler::Strategies::Http,
+    ]
+
+    ##
+    # @param [String] url
+    # @param [Hash] params
+    #
     def post(url, params = {})
       strategy = select_strategy(url)
-      strategy.process(url, params)
+
+      unless strategy
+        raise ArgumentError, "No strategy for URL #{url.inspect}"
+      end
+
+      strategy.new.process(url, params)
     end
-    
-    
+
+    ##
+    # Returns the strategy class to use based on the input URL.
+    #
+    # @param [String] url
+    # @return [Class]
+    #
     def select_strategy(url)
-      STRATEGIES.map do |strategy|
-        "Opener::CallbackHandler::Strategies::#{strategy.camelize}".constantize.new
-      end.select do |strategy_class|
-        strategy_class.pass_validation?(url)        
-      end.compact.first
+      return STRATEGIES.find do |const|
+        const.pass_validation?(url)
+      end
     end
-  end
-end
+  end # CallbackHandler
+end # Opener
