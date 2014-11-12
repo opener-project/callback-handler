@@ -27,8 +27,7 @@ module Opener
         # @return [HTTPClient]
         #
         def http_client
-          client = ::HTTPClient.new
-          client.connect_timeout = 120
+          client = HTTPClient.new
 
           return client
         end
