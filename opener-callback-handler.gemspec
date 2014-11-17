@@ -1,9 +1,9 @@
 require File.expand_path('../lib/opener/callback_handler/version', __FILE__)
 
 Gem::Specification.new do |spec|
-  spec.name          = "opener-callback-handler"
+  spec.name          = 'opener-callback-handler'
   spec.version       = Opener::CallbackHandler::VERSION
-  spec.authors       = ["development@olery.com"]
+  spec.authors       = ['development@olery.com']
   spec.summary       = 'Tool for handling different callback URLs based on their protocol.'
   spec.description   = spec.summary
 
@@ -16,11 +16,10 @@ Gem::Specification.new do |spec|
     'LICENSE.txt'
   ]).select { |file| File.file?(file) }
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
+  spec.add_dependency 'aws-sdk', '~> 1.0'
+  spec.add_dependency 'httpclient'
 
-  spec.add_dependency "json"
-  spec.add_dependency "activesupport"
-  spec.add_dependency "aws-sdk-core"
-  spec.add_dependency "httpclient"
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
 end

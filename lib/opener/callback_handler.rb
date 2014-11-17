@@ -1,10 +1,10 @@
 require 'json'
-require 'aws-sdk-core'
+require 'aws-sdk'
 require 'httpclient'
 
+require_relative 'callback_handler/version'
 require_relative 'callback_handler/strategies/amazon_sqs'
 require_relative 'callback_handler/strategies/http'
-require_relative 'callback_handler/strategies/version'
 
 module Opener
   class CallbackHandler

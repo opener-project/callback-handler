@@ -2,35 +2,57 @@ module Opener
   class CallbackHandler
     module Strategies
       ##
-      # Strategy for submitting data to an Amazon SQS queue.
+      # Strategy for submitting data to an Amazon SQS queue. This strategy
+      # expects URIs in the following format:
+      #
+      #     sqs://<name>
+      #
+      # Here `<name>` is the name of the queue to use.
+      #
+      # @!attribute [r] sqs
+      #  @return [AWS::SQS]
       #
       class AmazonSqs
+        attr_reader :sqs
+
         ##
         # @param [String] url
         # @return [TrueClass|FalseClass]
         #
         def self.pass_validation?(url)
-          return !!Regexp.new("^https:\/\/sqs.(.*)amazonaws.com\/.*").match(url)
+          return !!(url =~ /^sqs:\/\/.+/)
+        end
+
+        def initialize
+          @sqs = AWS::SQS.new
         end
 
         ##
-        # @param [String] url
-        # @param [Hash] params
+        # @param [String] uri The queue URI
+        # @param [Hash] params The message to submit.
         #
-        def process(url, params = {})
-          send_message(url, params)
+        def process(uri, params = {})
+          queue = queue_for_uri(uri)
+
+          queue.send_message(JSON.dump(params))
         end
 
         ##
-        # @param [String] url
-        # @param [Hash] params
+        # @param [String] uri
+        # @return [AWS::SQS::Queue]
         #
-        def send_message(url, params)
-          sqs = ::Aws::SQS::Client.new
-          params_json = params.is_a?(String) ? params : params.to_json
-          message_body = params.keys.include?(:message_body) ? params : {:message_body => params_json}
+        def queue_for_uri(uri)
+          parsed = URI.parse(uri)
 
-          sqs.send_message(message_body.merge(:queue_url=>url))
+          return queue_for_name(parsed.host)
+        end
+
+        ##
+        # @param [String] name
+        # @return [AWS::SQS::Queue]
+        #
+        def queue_for_name(name)
+          return sqs.queues.named(name)
         end
       end # AmazonSqs
     end # Strategies
