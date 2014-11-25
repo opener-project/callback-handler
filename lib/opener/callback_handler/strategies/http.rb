@@ -38,7 +38,12 @@ module Opener
         # @param [Hash] params
         #
         def process(url, params = {})
-          body = JSON.dump(params)
+          if params.key?(:body)
+            body_data = params[:body]
+          else
+            body_data = params
+          end
+          body = JSON.dump(body_data)
 
           http.post(url, :body => body, :header => HEADERS)
         end
