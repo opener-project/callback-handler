@@ -40,7 +40,7 @@ module Opener
         def process(url, params = {})
           body = JSON.dump(params)
 
-          http.post(url, body, :header => HEADERS)
+          http.post(url, body, HEADERS)
         end
       end # Http
     end # Strategies

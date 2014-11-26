@@ -25,7 +25,7 @@ describe Opener::CallbackHandler::Strategies::Http do
       payload = JSON.dump(:number => 10)
 
       @strategy.http.should_receive(:post)
-        .with(url, payload, :header => described_class::HEADERS)
+        .with(url, payload, described_class::HEADERS)
 
       @strategy.process(url, :number => 10)
     end
