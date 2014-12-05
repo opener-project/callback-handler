@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'aws-sdk', '~> 1.0'
   spec.add_dependency 'httpclient'
+  spec.add_dependency 'addressable'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

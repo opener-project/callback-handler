@@ -42,7 +42,7 @@ module Opener
         # @return [AWS::SQS::Queue]
         #
         def queue_for_uri(uri)
-          parsed = URI.parse(uri)
+          parsed = Addressable::URI.parse(uri)
 
           return queue_for_name(parsed.host)
         end

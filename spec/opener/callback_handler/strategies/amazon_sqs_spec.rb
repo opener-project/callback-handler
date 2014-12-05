@@ -43,5 +43,13 @@ describe Opener::CallbackHandler::Strategies::AmazonSqs do
 
       @strategy.queue_for_uri('sqs://foo').should == @queue
     end
+
+    example 'return the queue for a URI containing an underscore' do
+      @strategy.should_receive(:queue_for_name)
+        .with('foo_bar')
+        .and_return(@queue)
+
+      @strategy.queue_for_uri('sqs://foo_bar').should == @queue
+    end
   end
 end

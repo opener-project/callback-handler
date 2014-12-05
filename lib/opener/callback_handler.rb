@@ -1,6 +1,7 @@
 require 'json'
 require 'aws-sdk'
 require 'httpclient'
+require 'addressable/uri'
 
 require_relative 'callback_handler/version'
 require_relative 'callback_handler/strategies/amazon_sqs'
