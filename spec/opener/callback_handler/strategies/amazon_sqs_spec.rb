@@ -18,38 +18,46 @@ describe Opener::CallbackHandler::Strategies::AmazonSqs do
   context '#process' do
     before do
       @strategy = described_class.new
-      @queue    = AWS::SQS::Queue.new('foo')
-
-      @strategy.stub(:queue_for_uri).and_return(@queue)
     end
 
     example 'send a message to the queue' do
-      @queue.should_receive(:send_message).with(JSON.dump(:foo => 10))
+      @strategy.sqs
+        .should_receive(:send_message)
+        .with(
+          :queue_url    => 'http://foo.com',
+          :message_body => JSON.dump(:foo => 10)
+        )
 
-      @strategy.process('foo', :foo => 10)
+      @strategy.should_receive(:queue_url_for_uri)
+        .with('sqs://foo')
+        .and_return('http://foo.com')
+
+      @strategy.process('sqs://foo', :foo => 10)
     end
   end
 
-  context '#queue_for_uri' do
-    before do
-      @strategy = described_class.new
-      @queue    = AWS::SQS::Queue.new('foo')
-    end
+  context '#queue_url_for_uri' do
+    example 'return the URL of a queue' do
+      strategy = described_class.new
 
-    example 'return the queue for a URI' do
-      @strategy.should_receive(:queue_for_name)
+      strategy.should_receive(:queue_url_for_name)
         .with('foo')
-        .and_return(@queue)
+        .and_return('http://foo.com')
 
-      @strategy.queue_for_uri('sqs://foo').should == @queue
+      strategy.queue_url_for_uri('sqs://foo').should == 'http://foo.com'
     end
+  end
 
-    example 'return the queue for a URI containing an underscore' do
-      @strategy.should_receive(:queue_for_name)
-        .with('foo_bar')
-        .and_return(@queue)
+  context '#queue_url_for_name' do
+    example 'return the URL of a queue' do
+      strategy = described_class.new
 
-      @strategy.queue_for_uri('sqs://foo_bar').should == @queue
+      strategy.sqs
+        .should_receive(:get_queue_url)
+        .with(:queue_name => 'foo')
+        .and_return(double(:response, :queue_url => 'http://foo.com'))
+
+      strategy.queue_url_for_name('foo').should == 'http://foo.com'
     end
   end
 end

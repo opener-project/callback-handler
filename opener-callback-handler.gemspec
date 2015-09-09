@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
     'LICENSE.txt'
   ]).select { |file| File.file?(file) }
 
-  spec.add_dependency 'aws-sdk', '~> 1.0'
+  spec.add_dependency 'aws-sdk', '~> 2.0'
   spec.add_dependency 'httpclient'
   spec.add_dependency 'addressable'
 

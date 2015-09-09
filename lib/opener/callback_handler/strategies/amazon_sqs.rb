@@ -10,7 +10,7 @@ module Opener
       # Here `<name>` is the name of the queue to use.
       #
       # @!attribute [r] sqs
-      #  @return [AWS::SQS]
+      #  @return [Aws::SQS::Client]
       #
       class AmazonSqs
         attr_reader :sqs
@@ -24,35 +24,32 @@ module Opener
         end
 
         def initialize
-          @sqs = AWS::SQS.new
+          @sqs = Aws::SQS::Client.new
         end
 
-        ##
         # @param [String] uri The queue URI
         # @param [Hash] params The message to submit.
-        #
         def process(uri, params = {})
-          queue = queue_for_uri(uri)
+          queue_url = queue_url_for_uri(uri)
 
-          queue.send_message(JSON.dump(params))
+          sqs.send_message(
+            :queue_url    => queue_url,
+            :message_body => JSON.dump(params)
+          )
         end
 
-        ##
         # @param [String] uri
-        # @return [AWS::SQS::Queue]
-        #
-        def queue_for_uri(uri)
+        # @return [String]
+        def queue_url_for_uri(uri)
           parsed = Addressable::URI.parse(uri)
 
-          return queue_for_name(parsed.host)
+          return queue_url_for_name(parsed.host)
         end
 
-        ##
         # @param [String] name
-        # @return [AWS::SQS::Queue]
-        #
-        def queue_for_name(name)
-          return sqs.queues.named(name)
+        # @return [String]
+        def queue_url_for_name(name)
+          sqs.get_queue_url(:queue_name => name).queue_url
         end
       end # AmazonSqs
     end # Strategies
