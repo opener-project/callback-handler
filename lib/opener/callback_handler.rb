@@ -1,5 +1,5 @@
 require 'json'
-require 'aws-sdk'
+require 'aws-sdk-sqs'
 require 'httpclient'
 require 'addressable/uri'
 
